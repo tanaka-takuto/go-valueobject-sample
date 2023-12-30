@@ -4,7 +4,6 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -96,7 +95,7 @@ func (hwps HashedWithPepperSaltString) ValidString(plainStr string) error {
 
 // pepper returns a pepper string
 func pepper() string {
-	p := os.Getenv("PEPPER")
+	p := getConfig().Pepper
 	if p == "" {
 		panic("PEPPER is not set")
 	}

@@ -49,7 +49,7 @@ func TestHashedWithSaltString_ValidString(t *testing.T) {
 }
 
 func TestHashedWithPepperSaltString_ValidString(t *testing.T) {
-	t.Setenv("PEPPER", "12345678901234567890123456789012")
+	initializeTestConfig(t)
 
 	type args struct {
 		plainStr     string
