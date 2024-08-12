@@ -1,9 +1,9 @@
-package main
+package util
 
 import "math/rand"
 
-// newRandomString generate a random string
-func newRandomString(length int) string {
+// NewRandomString generate a random string
+func NewRandomString(length int) string {
 	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	b := make([]byte, length)
 	for i := range b {

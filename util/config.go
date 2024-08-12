@@ -1,4 +1,4 @@
-package main
+package util
 
 import "os"
 
@@ -11,17 +11,17 @@ type config struct {
 // c is a global variable that holds the configuration for the application.
 var c *config
 
-// getConfig returns the configuration for the application.
-func getConfig() config {
+// GetConfig returns the configuration for the application.
+func GetConfig() config {
 	if c == nil {
-		initializeConfig()
+		InitializeConfig()
 	}
 
 	return *c
 }
 
-// initializeConfig initializes the configuration by retrieving the encryption key and pepper from environment variables.
-func initializeConfig() {
+// InitializeConfig initializes the configuration by retrieving the encryption key and pepper from environment variables.
+func InitializeConfig() {
 	encryptKey := os.Getenv("ENCRYPT_KEY")
 	pepper := os.Getenv("PEPPER")
 	if encryptKey == "" {

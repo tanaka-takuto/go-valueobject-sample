@@ -1,7 +1,9 @@
-package main
+package user
 
 import (
 	"testing"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/util"
 )
 
 func TestNewRawEmail(t *testing.T) {
@@ -37,7 +39,7 @@ func TestNewRawEmail(t *testing.T) {
 }
 
 func Test_EmailAndRawEmail(t *testing.T) {
-	initializeTestConfig(t)
+	util.InitializeTestConfig(t)
 
 	type args struct {
 		email string
@@ -74,8 +76,8 @@ func Test_EmailAndRawEmail(t *testing.T) {
 				t.Errorf("NewRawEmail() = %v, want %v", *re, *re2)
 			}
 
-			if tt.args.email != re2.value {
-				t.Errorf("Email.RawEmail() = %v, want %v", re2.value, tt.args.email)
+			if tt.args.email != re2.Value() {
+				t.Errorf("Email.RawEmail() = %v, want %v", re2.Value(), tt.args.email)
 			}
 		})
 	}

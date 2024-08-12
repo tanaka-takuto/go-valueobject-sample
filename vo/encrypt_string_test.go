@@ -1,11 +1,13 @@
-package main
+package vo
 
 import (
 	"testing"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/util"
 )
 
 func TestEncryptAndDecrypt(t *testing.T) {
-	initializeTestConfig(t)
+	util.InitializeTestConfig(t)
 
 	tests := []struct {
 		name     string

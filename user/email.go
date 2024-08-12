@@ -1,8 +1,10 @@
-package main
+package user
 
 import (
 	"errors"
 	"regexp"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/vo"
 )
 
 var (
@@ -20,7 +22,7 @@ func isEmailValid(email string) error {
 }
 
 // RawEmail is a type that holds the raw email address.
-type RawEmail StringValueObject
+type RawEmail vo.StringValueObject
 
 // NewRawEmail returns a new RawEmail.
 func NewRawEmail(email string) (*RawEmail, error) {
@@ -28,16 +30,16 @@ func NewRawEmail(email string) (*RawEmail, error) {
 		return nil, err
 	}
 
-	re := RawEmail(NewStringValueObject(email))
+	re := RawEmail(vo.NewStringValueObject(email))
 	return &re, nil
 }
 
 // Email is a type that holds the encrypted email address.
-type Email EncryptedBytes
+type Email vo.EncryptedBytes
 
 // NewEmail returns a new Email.
 func NewEmail(rawEmail RawEmail) (*Email, error) {
-	ds := NewDecryptedString(rawEmail.value)
+	ds := vo.NewDecryptedString(rawEmail.Value())
 	eb, err := ds.Encrypt()
 	if err != nil {
 		return nil, err
@@ -49,11 +51,11 @@ func NewEmail(rawEmail RawEmail) (*Email, error) {
 
 // Decrypt returns the decrypted email address.
 func (e *Email) RawEmail() (*RawEmail, error) {
-	eb := EncryptedBytes(*e)
+	eb := vo.EncryptedBytes(*e)
 	ds, err := eb.Decrypt()
 	if err != nil {
 		return nil, err
 	}
 
-	return NewRawEmail(ds.value)
+	return NewRawEmail(ds.Value())
 }

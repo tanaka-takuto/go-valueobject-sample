@@ -1,4 +1,4 @@
-package main
+package vo
 
 import (
 	"bytes"
@@ -6,6 +6,8 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"fmt"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/util"
 )
 
 // DecryptedString is a decrypted string
@@ -42,7 +44,7 @@ func pkcs7UnPadding(data []byte) []byte {
 
 // Encrypt converts a DecryptedString to an EncryptedBytes
 func (ds DecryptedString) Encrypt() (*EncryptedBytes, error) {
-	encryptKey := getConfig().EncryptKey
+	encryptKey := util.GetConfig().EncryptKey
 	encryptKeyBytes := []byte(encryptKey)
 	if len(encryptKeyBytes) != 32 {
 		return nil, fmt.Errorf("invalid encrypt key length")
@@ -67,7 +69,7 @@ type EncryptedBytes BytesValueObject
 
 // Decrypt converts an EncryptedBytes to a DecryptedString
 func (es EncryptedBytes) Decrypt() (*DecryptedString, error) {
-	encryptKey := getConfig().EncryptKey
+	encryptKey := util.GetConfig().EncryptKey
 	encryptKeyBytes := []byte(encryptKey)
 	if len(encryptKeyBytes) != 32 {
 		return nil, fmt.Errorf("invalid encrypt key length")

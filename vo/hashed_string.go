@@ -1,10 +1,12 @@
-package main
+package vo
 
 import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
 	"strings"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/util"
 )
 
 // HashedString is a hashed string
@@ -46,7 +48,7 @@ type HashedWithSaltString StringValueObject
 
 // NewHashedStringWithSalt Create a hashed string with a specified salt
 func NewHashedStringWithSalt(plainStr string) HashedWithSaltString {
-	salt := newRandomString(saltLength)
+	salt := util.NewRandomString(saltLength)
 	return newHashedStringWithSalt(plainStr, salt)
 }
 
@@ -100,7 +102,7 @@ func (hwps HashedWithPepperSaltString) ValidString(plainStr string) error {
 
 // pepper returns a pepper string
 func pepper() string {
-	p := getConfig().Pepper
+	p := util.GetConfig().Pepper
 	if p == "" {
 		panic("PEPPER is not set")
 	}

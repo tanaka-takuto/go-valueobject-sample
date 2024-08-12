@@ -1,13 +1,15 @@
-package main
+package user
 
 import (
 	"errors"
 	"fmt"
 	"regexp"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/vo"
 )
 
 // RawPassword is a raw password
-type RawPassword StringValueObject
+type RawPassword vo.StringValueObject
 
 var (
 	uppercaseRegexp   = regexp.MustCompile(`[A-Z]`)
@@ -27,24 +29,24 @@ func NewRawPassword(value string) (*RawPassword, error) {
 		return nil, errors.New("invalid password")
 	}
 
-	rp := RawPassword(NewStringValueObject(value))
+	rp := RawPassword(vo.NewStringValueObject(value))
 
 	return &rp, nil
 }
 
 // Password is a password with salt
-type Password HashedWithSaltString
+type Password vo.HashedWithSaltString
 
 // NewPassword creates a password
 func NewPassword(rawPassword RawPassword) Password {
-	password := NewHashedStringWithSalt(rawPassword.value)
+	password := vo.NewHashedStringWithSalt(rawPassword.Value())
 	return Password(password)
 }
 
 // ValidString checks if the string is valid
 func (p Password) ValidString(challengePassword ChallengePassword) error {
-	password := HashedWithSaltString(p)
-	if err := password.ValidString(challengePassword.value); err != nil {
+	password := vo.HashedWithSaltString(p)
+	if err := password.ValidString(challengePassword.Value()); err != nil {
 		return fmt.Errorf("invalid password")
 	}
 
@@ -52,9 +54,9 @@ func (p Password) ValidString(challengePassword ChallengePassword) error {
 }
 
 // ChallengePassword is a challenge password
-type ChallengePassword StringValueObject
+type ChallengePassword vo.StringValueObject
 
 // NewChallengePassword creates a challenge password
 func NewChallengePassword(value string) ChallengePassword {
-	return ChallengePassword(NewStringValueObject(value))
+	return ChallengePassword(vo.NewStringValueObject(value))
 }

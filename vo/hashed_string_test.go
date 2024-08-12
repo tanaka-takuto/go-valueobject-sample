@@ -1,6 +1,10 @@
-package main
+package vo
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/tanaka.takuto/go-valueobject-sample/util"
+)
 
 func TestHashedString_ValidString(t *testing.T) {
 	type args struct {
@@ -49,7 +53,7 @@ func TestHashedWithSaltString_ValidString(t *testing.T) {
 }
 
 func TestHashedWithPepperSaltString_ValidString(t *testing.T) {
-	initializeTestConfig(t)
+	util.InitializeTestConfig(t)
 
 	type args struct {
 		plainStr     string
