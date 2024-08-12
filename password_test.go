@@ -35,7 +35,7 @@ func TestPassword_ValidString(t *testing.T) {
 			if err != nil {
 				return
 			}
-			password := NewPassword(rawPassword)
+			password := NewPassword(*rawPassword)
 
 			challengePassword := NewChallengePassword(tt.args.challengePassword)
 			if err := password.ValidString(challengePassword); (err != nil) != tt.wants.challengePasswordError {

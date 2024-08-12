@@ -8,7 +8,7 @@ import (
 )
 
 // HashedString is a hashed string
-type HashedString string
+type HashedString StringValueObject
 
 // NewHashedString creates a hashed string
 func NewHashedString(plainStr string) HashedString {
@@ -21,7 +21,9 @@ func NewHashedString(plainStr string) HashedString {
 	hashedBytes := h.Sum(nil)
 	hashedStr := hex.EncodeToString(hashedBytes)
 
-	return HashedString(fmt.Sprintf("%v:%v", "sha512", hashedStr))
+	hashedStrWithAlgorithm := fmt.Sprintf("%v:%v", "sha512", hashedStr)
+
+	return HashedString(NewStringValueObject(hashedStrWithAlgorithm))
 }
 
 // ValidString checks if the string is valid
@@ -40,7 +42,7 @@ const (
 )
 
 // HashedWithSaltString is a hashed string with salt
-type HashedWithSaltString string
+type HashedWithSaltString StringValueObject
 
 // NewHashedStringWithSalt Create a hashed string with a specified salt
 func NewHashedStringWithSalt(plainStr string) HashedWithSaltString {
@@ -53,12 +55,15 @@ func newHashedStringWithSalt(plainStr string, salt string) HashedWithSaltString 
 	plainStrWithSalt := plainStr + salt
 
 	hashedString := NewHashedString(plainStrWithSalt)
-	return HashedWithSaltString(fmt.Sprintf("%v:%v", hashedString, salt))
+
+	hashedStringWithSalt := fmt.Sprintf("%v:%v", hashedString.value, salt)
+
+	return HashedWithSaltString(NewStringValueObject(hashedStringWithSalt))
 }
 
 // ValidString checks if the string is valid
 func (hws HashedWithSaltString) ValidString(plainStr string) error {
-	splitted := strings.Split(string(hws), ":")
+	splitted := strings.Split(string(hws.value), ":")
 	if len(splitted) != 3 {
 		return fmt.Errorf("invalid hashed string")
 	}
@@ -77,7 +82,7 @@ func (hws HashedWithSaltString) ValidString(plainStr string) error {
 }
 
 // HashedWithPepperSaltString is a hashed string with pepper salt
-type HashedWithPepperSaltString string
+type HashedWithPepperSaltString StringValueObject
 
 // NewHashedStringWithPepperSalt Create a hashed string with a specified pepper salt
 func NewHashedStringWithPepperSalt(plainStr string) HashedWithPepperSaltString {

@@ -9,11 +9,11 @@ import (
 )
 
 // DecryptedString is a decrypted string
-type DecryptedString string
+type DecryptedString StringValueObject
 
 // NewDecryptedString creates a decrypted string
 func NewDecryptedString(value string) DecryptedString {
-	return DecryptedString(value)
+	return DecryptedString(NewStringValueObject(value))
 }
 
 // generateIV generates an Initialization Vector of AES block size
@@ -54,16 +54,16 @@ func (ds DecryptedString) Encrypt() (*EncryptedBytes, error) {
 		return nil, err
 	}
 
-	paddedBytes := pkcs7Padding([]byte(ds), aes.BlockSize)
+	paddedBytes := pkcs7Padding([]byte(ds.value), aes.BlockSize)
 	encrypted := make([]byte, len(paddedBytes))
 	cipher.NewCBCEncrypter(block, iv).CryptBlocks(encrypted, paddedBytes)
 
-	es := EncryptedBytes(append(encrypted, iv...))
+	es := EncryptedBytes(NewBytesValueObject(append(encrypted, iv...)))
 	return &es, nil
 }
 
 // EncryptedBytes is an encrypted bytes
-type EncryptedBytes []byte
+type EncryptedBytes BytesValueObject
 
 // Decrypt converts an EncryptedBytes to a DecryptedString
 func (es EncryptedBytes) Decrypt() (*DecryptedString, error) {
@@ -78,7 +78,8 @@ func (es EncryptedBytes) Decrypt() (*DecryptedString, error) {
 		panic(err)
 	}
 
-	encrypted, iv := es[:len(es)-aes.BlockSize], es[len(es)-aes.BlockSize:]
+	esLen := len(es.value)
+	encrypted, iv := es.value[:esLen-aes.BlockSize], es.value[esLen-aes.BlockSize:]
 
 	decrypted := make([]byte, len([]byte(encrypted)))
 	cbcDecrypter := cipher.NewCBCDecrypter(block, []byte(iv))
@@ -89,6 +90,6 @@ func (es EncryptedBytes) Decrypt() (*DecryptedString, error) {
 		return nil, fmt.Errorf("invalid padding size")
 	}
 
-	ds := DecryptedString(string(unpadedDecrypted))
+	ds := DecryptedString(NewStringValueObject(string(unpadedDecrypted)))
 	return &ds, nil
 }

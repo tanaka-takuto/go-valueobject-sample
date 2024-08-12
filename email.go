@@ -20,7 +20,7 @@ func isEmailValid(email string) error {
 }
 
 // RawEmail is a type that holds the raw email address.
-type RawEmail string
+type RawEmail StringValueObject
 
 // NewRawEmail returns a new RawEmail.
 func NewRawEmail(email string) (*RawEmail, error) {
@@ -28,7 +28,7 @@ func NewRawEmail(email string) (*RawEmail, error) {
 		return nil, err
 	}
 
-	re := RawEmail(email)
+	re := RawEmail(NewStringValueObject(email))
 	return &re, nil
 }
 
@@ -37,13 +37,14 @@ type Email EncryptedBytes
 
 // NewEmail returns a new Email.
 func NewEmail(rawEmail RawEmail) (*Email, error) {
-	ds := NewDecryptedString(string(rawEmail))
+	ds := NewDecryptedString(rawEmail.value)
 	eb, err := ds.Encrypt()
 	if err != nil {
 		return nil, err
 	}
 
-	return (*Email)(eb), nil
+	e := Email(*eb)
+	return &e, nil
 }
 
 // Decrypt returns the decrypted email address.
@@ -54,5 +55,5 @@ func (e *Email) RawEmail() (*RawEmail, error) {
 		return nil, err
 	}
 
-	return NewRawEmail(string(*ds))
+	return NewRawEmail(ds.value)
 }

@@ -74,8 +74,8 @@ func Test_EmailAndRawEmail(t *testing.T) {
 				t.Errorf("NewRawEmail() = %v, want %v", *re, *re2)
 			}
 
-			if tt.args.email != string(*re2) {
-				t.Errorf("Email.RawEmail() = %v, want %v", string(*re2), tt.args.email)
+			if tt.args.email != re2.value {
+				t.Errorf("Email.RawEmail() = %v, want %v", re2.value, tt.args.email)
 			}
 		})
 	}

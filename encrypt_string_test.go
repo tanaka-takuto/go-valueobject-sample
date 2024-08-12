@@ -38,7 +38,7 @@ func TestEncryptAndDecrypt(t *testing.T) {
 				return
 			}
 
-			if tt.plainStr != string(*got) {
+			if tt.plainStr != got.value {
 				t.Errorf("Encrypt And Decrypt = %v, want %v", *got, tt.plainStr)
 			}
 		})

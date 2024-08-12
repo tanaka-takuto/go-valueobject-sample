@@ -7,7 +7,7 @@ import (
 )
 
 // RawPassword is a raw password
-type RawPassword string
+type RawPassword StringValueObject
 
 var (
 	uppercaseRegexp   = regexp.MustCompile(`[A-Z]`)
@@ -18,16 +18,18 @@ var (
 )
 
 // NewRawPassword creates a raw password
-func NewRawPassword(value string) (RawPassword, error) {
+func NewRawPassword(value string) (*RawPassword, error) {
 	if !uppercaseRegexp.MatchString(value) ||
 		!lowercaseRegexp.MatchString(value) ||
 		!digitRegexp.MatchString(value) ||
 		!specialCharRegexp.MatchString(value) ||
 		!lengthRegexp.MatchString(value) {
-		return "", errors.New("invalid password")
+		return nil, errors.New("invalid password")
 	}
 
-	return RawPassword(value), nil
+	rp := RawPassword(NewStringValueObject(value))
+
+	return &rp, nil
 }
 
 // Password is a password with salt
@@ -35,14 +37,14 @@ type Password HashedWithSaltString
 
 // NewPassword creates a password
 func NewPassword(rawPassword RawPassword) Password {
-	password := NewHashedStringWithSalt(string(rawPassword))
+	password := NewHashedStringWithSalt(rawPassword.value)
 	return Password(password)
 }
 
 // ValidString checks if the string is valid
 func (p Password) ValidString(challengePassword ChallengePassword) error {
 	password := HashedWithSaltString(p)
-	if err := password.ValidString(string(challengePassword)); err != nil {
+	if err := password.ValidString(challengePassword.value); err != nil {
 		return fmt.Errorf("invalid password")
 	}
 
@@ -50,9 +52,9 @@ func (p Password) ValidString(challengePassword ChallengePassword) error {
 }
 
 // ChallengePassword is a challenge password
-type ChallengePassword string
+type ChallengePassword StringValueObject
 
 // NewChallengePassword creates a challenge password
 func NewChallengePassword(value string) ChallengePassword {
-	return ChallengePassword(value)
+	return ChallengePassword(NewStringValueObject(value))
 }
